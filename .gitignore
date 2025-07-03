@@ -45,3 +45,4 @@ bun.lock*
 
 # docker
 docker-compose.yml
+!examples/docker-compose.yml

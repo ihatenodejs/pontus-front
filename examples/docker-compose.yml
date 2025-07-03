@@ -1,0 +1,10 @@
+services:
+  pontus:
+    build: .
+    container_name: pontus
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - .:/app
