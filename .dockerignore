@@ -1,0 +1,7 @@
+README.md
+LICENSE
+docker-compose.yml
+examples/
+node_modules
+.next
+.git

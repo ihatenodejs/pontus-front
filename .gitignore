@@ -42,3 +42,6 @@ next-env.d.ts
 
 # bun
 bun.lock*
+
+# docker
+docker-compose.yml
