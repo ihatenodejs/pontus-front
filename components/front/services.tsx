@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Nav } from "../core/nav";
 import { services } from "@/config/services";
-import { TbArrowLeft, TbEye, TbShieldLock } from "react-icons/tb";
+import { TbArrowLeft, TbEye, TbLink, TbShieldLock } from "react-icons/tb";
 
 function HumanPriceStatus(priceStatus: "open" | "invite-only" | "by-request") {
   switch (priceStatus) {
@@ -111,7 +111,7 @@ export function ServicesShell({ slug }: { slug: string }) {
           <p className="text-md text-black">
             Privacy is a big concern to us, too. That&apos;s why we:
           </p>
-          <ul className="list-disc list-inside text-md text-black">
+          <ul className="list-disc list-inside text-sm text-black">
             <li>Never share your data to third parties.</li>
             <li>Never use your data for advertising.</li>
             <li>Never use your data for any other purpose than to provide you with the service you have requested.</li>
@@ -119,6 +119,25 @@ export function ServicesShell({ slug }: { slug: string }) {
             <li>Provide additional options to manage your data.</li>
           </ul>
         </div>
+        {service?.quickLinks && (
+          <div className="flex flex-col gap-4 rounded-2xl px-8 py-4 bg-gray-200">
+            <div className="flex flex-row items-center gap-2 w-full my-2">
+              <h2 className="flex flex-row items-center gap-2 text-2xl font-semibold text-black">
+                <TbLink size={32} />
+                Quick Links
+              </h2>
+            </div>
+            <ul className="list-disc list-inside text-md text-black">
+              {service.quickLinks.map((link, index) => (
+                <Link href={link.url} key={index}>
+                  <button className="flex flex-row items-center gap-2 text-black hover:underline transition-all duration-300 cursor-pointer">
+                    <link.icon size={16} /> {link.name}
+                  </button>
+                </Link>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </main>
   )

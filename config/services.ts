@@ -1,5 +1,21 @@
-import { SiForgejo, SiJellyfin, SiOllama } from "react-icons/si"
-import { TbBrowser, TbBubbleText, TbDeviceTv, TbGitBranch, TbKey, TbLink, TbLock, TbMail, TbServer, TbUser } from "react-icons/tb"
+import {
+  SiForgejo,
+  SiJellyfin,
+  SiOllama,
+} from "react-icons/si"
+import {
+  TbBrowser,
+  TbBubbleText,
+  TbDeviceTv,
+  TbGitBranch,
+  TbKey,
+  TbLink,
+  TbLock,
+  TbMail,
+  TbServer,
+  TbUser,
+  TbUserPlus,
+} from "react-icons/tb"
 
 export interface Service {
   name: string;
@@ -35,7 +51,24 @@ export const services = [
         icon: TbLock,
         description: "Your password can be changed by an admin. It is not visible.",
       },
-    }
+    },
+    quickLinks: [
+      {
+        name: "Create an Account",
+        url: "https://git.p0ntus.com/user/sign_up",
+        icon: TbUserPlus,
+      },
+      {
+        name: "Login",
+        url: "https://git.p0ntus.com/user/login",
+        icon: TbUser,
+      },
+      {
+        name: "Forgot Password",
+        url: "https://git.p0ntus.com/user/forgot_password",
+        icon: TbLock,
+      },
+    ]
   },
   {
     name: "tv",
@@ -77,7 +110,7 @@ export const services = [
       },
     }
   },
-  {
+  /*{
     name: "keybox",
     description: "Need integrity? We do our best to provide you STRONG",
     icon: TbKey,
@@ -97,7 +130,7 @@ export const services = [
         description: "If you authenticate with SSO, your connections are visible to admins.",
       },
     }
-  },
+  },*/
   {
     name: "mail",
     description: "A private mail server with full data control. Powered by Mailu.",
@@ -117,7 +150,24 @@ export const services = [
         icon: TbMail,
         description: "Your email address is visible to admins.",
       },
-    }
+    },
+    quickLinks: [
+      {
+        name: "Create an Account",
+        url: "https://pontusmail.org/admin/user/signup",
+        icon: TbUserPlus,
+      },
+      {
+        name: "Login",
+        url: "https://pontusmail.org/sso/login",
+        icon: TbUser,
+      },
+      {
+        name: "Server Details",
+        url: "https://pontusmail.org/admin/client",
+        icon: TbServer,
+      },
+    ]
   },
   {
     name: "hosting",
