@@ -43,14 +43,14 @@ export function ServicesShell({ slug }: { slug: string }) {
   return (
     <main>
       <Nav />
-      <div className="flex flex-col items-center justify-between gap-4 my-20">
+      <div className="flex flex-col items-center justify-between gap-4 my-12 sm:my-20 px-4">
         <div className="flex flex-row items-center justify-between gap-2">
-          {Icon && <Icon size={36} />}
-          <h1 className="text-4xl font-bold">
+          {Icon && <Icon size={32} className="sm:w-9 sm:h-9" />}
+          <h1 className="text-3xl sm:text-4xl font-bold">
             {service?.name}
           </h1>
         </div>
-        <p className="text-lg">
+        <p className="text-base sm:text-lg text-center">
           {service?.description}
         </p>
         <Link href={`/services`}>
@@ -60,28 +60,28 @@ export function ServicesShell({ slug }: { slug: string }) {
           </button>
         </Link>
       </div>
-      <div className="grid grid-cols-4 gap-4 px-14">
-        <div className={`flex flex-col justify-between gap-4 rounded-2xl px-8 py-4 ${HumanPriceStatusColor(service?.priceStatus as "open" | "invite-only" | "by-request")}`}>
-          <div className="flex flex-row items-center justify-between gap-2 w-full my-2">
-            <h2 className="text-2xl font-semibold text-white">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4 px-4 sm:px-8 lg:px-14">
+        <div className={`flex flex-col justify-between gap-4 rounded-2xl px-6 sm:px-8 py-4 ${HumanPriceStatusColor(service?.priceStatus as "open" | "invite-only" | "by-request")}`}>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 w-full my-2">
+            <h2 className="text-xl sm:text-2xl font-semibold text-white">
               {HumanPriceStatus(service?.priceStatus as "open" | "invite-only" | "by-request")}
             </h2>
             {service?.joinLink && (
               <Link href={service.joinLink}>
-                <button className="flex flex-row items-center justify-between gap-2 text-white bg-green-600 px-4 py-2 rounded-full hover:underline transition-all duration-300 cursor-pointer">
+                <button className="flex flex-row items-center justify-center gap-2 text-white bg-green-600 px-4 py-2 rounded-full hover:underline transition-all duration-300 cursor-pointer w-full sm:w-auto">
                   Join!
                 </button>
               </Link>
             )}
           </div>
-          <p className="text-md text-white mb-3">
+          <p className="text-sm sm:text-base text-white mb-3">
             {PriceStatusDesc(service?.priceStatus as "open" | "invite-only" | "by-request", service?.name as string)}
           </p>
         </div>
-        <div className={`flex flex-col justify-between gap-4 rounded-2xl px-8 py-4 bg-gray-200`}>
+        <div className={`flex flex-col justify-between gap-4 rounded-2xl px-6 sm:px-8 py-4 bg-gray-200`}>
           <div className="flex flex-row items-center gap-2 w-full my-2">
-            <h2 className="flex flex-row items-center gap-2 text-2xl font-semibold text-black">
-              <TbEye size={32} />
+            <h2 className="flex flex-row items-center gap-2 text-xl sm:text-2xl font-semibold text-black">
+              <TbEye size={28} className="sm:w-8 sm:h-8" />
               What admins can see
             </h2>
           </div>
@@ -92,26 +92,26 @@ export function ServicesShell({ slug }: { slug: string }) {
             .filter(([, value]) => value !== undefined)
             .map(([key, value], index) => (
               <div className="flex flex-col w-full mb-2" key={index}>
-                <p className="flex flex-row items-center gap-1 text-md font-semibold text-black">
+                <p className="flex flex-row items-center gap-1 text-sm sm:text-base font-semibold text-black">
                   <value.icon size={16} /> {key}
                 </p>
-                <p className="text-sm text-black">
+                <p className="text-xs sm:text-sm text-black">
                   {value.description}
                 </p>
               </div>
             ))}
         </div>
-        <div className={`flex flex-col gap-4 rounded-2xl px-8 py-4 bg-gray-200`}>
+        <div className={`flex flex-col gap-4 rounded-2xl px-6 sm:px-8 py-4 bg-gray-200`}>
           <div className="flex flex-row items-center gap-2 w-full my-2">
-            <h2 className="flex flex-row items-center gap-2 text-2xl font-semibold text-black">
-              <TbShieldLock size={32} />
+            <h2 className="flex flex-row items-center gap-2 text-xl sm:text-2xl font-semibold text-black">
+              <TbShieldLock size={28} className="sm:w-8 sm:h-8" />
               Our commitment to privacy
             </h2>
           </div>
-          <p className="text-md text-black">
+          <p className="text-sm sm:text-base text-black">
             Privacy is a big concern to us, too. That&apos;s why we:
           </p>
-          <ul className="list-disc list-inside text-sm text-black">
+          <ul className="list-disc list-inside text-xs sm:text-sm text-black">
             <li>Never share your data to third parties.</li>
             <li>Never use your data for advertising.</li>
             <li>Never use your data for any other purpose than to provide you with the service you have requested.</li>
@@ -120,14 +120,14 @@ export function ServicesShell({ slug }: { slug: string }) {
           </ul>
         </div>
         {service?.quickLinks && (
-          <div className="flex flex-col gap-4 rounded-2xl px-8 py-4 bg-gray-200">
+          <div className="flex flex-col gap-4 rounded-2xl px-6 sm:px-8 py-4 bg-gray-200">
             <div className="flex flex-row items-center gap-2 w-full my-2">
-              <h2 className="flex flex-row items-center gap-2 text-2xl font-semibold text-black">
-                <TbLink size={32} />
+              <h2 className="flex flex-row items-center gap-2 text-xl sm:text-2xl font-semibold text-black">
+                <TbLink size={28} className="sm:w-8 sm:h-8" />
                 Quick Links
               </h2>
             </div>
-            <ul className="list-disc list-inside text-md text-black">
+            <ul className="list-disc list-inside text-sm sm:text-base text-black">
               {service.quickLinks.map((link, index) => (
                 <Link href={link.url} key={index}>
                   <button className="flex flex-row items-center gap-2 text-black hover:underline transition-all duration-300 cursor-pointer">
