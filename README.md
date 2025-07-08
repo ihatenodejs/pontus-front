@@ -1,5 +1,10 @@
 # pontus-front
 
+[![Next.js](https://img.shields.io/badge/Next.js-black?logo=next.js&logoColor=white)](https://nextjs.org)
+[![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000?logo=shadcnui&logoColor=fff)](https://ui.shadcn.com)
+[![Drizzle](https://img.shields.io/badge/Drizzle-C5F74F?logo=drizzle&logoColor=000)](https://orm.drizzle.team)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff)](https://docker.com)
+
 The source code for the p0ntus web frontend.
 
 ## Introduction
@@ -98,6 +103,12 @@ If you use a reverse proxy, don't forget to comment the ports section out like s
 ...
 ```
 
+To set yourself as an admin, you can run:
+
+```bash
+bun tools/set-admin.ts your@email.com
+```
+
 ## Setup for Development
 
 ### What you need
@@ -160,6 +171,12 @@ bun dev
 At any time, you can also run `docker compose up -d --build` to test in Docker.
 
 Now, open up http://localhost:3000 and see how it goes! Leave an Issue if you encounter any challenges or issues along the way.
+
+To set yourself as an admin, you can run:
+
+```bash
+bun tools/set-admin.ts your@email.com
+```
 
 ## Updating
 

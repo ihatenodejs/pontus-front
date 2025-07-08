@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const protectedRoutes = ['/dashboard', '/admin'];
+const protectedRoutes = ['/dashboard', '/admin', '/requests'];
+const ensureSignedOutRoutes = ['/login', '/register'];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -8,8 +9,17 @@ export async function middleware(request: NextRequest) {
   const isProtectedRoute = protectedRoutes.some(route =>
     pathname.startsWith(route)
   );
+  const isEnsureSignedOutRoute = ensureSignedOutRoutes.some(route =>
+    pathname.startsWith(route)
+  );
 
-  if (!isProtectedRoute) {
+  if (isEnsureSignedOutRoute) {
+    const sessionToken = request.cookies.get('better-auth.session_token')?.value || request.cookies.get('__Secure-better-auth.session_token')?.value;
+
+    if (sessionToken) {
+      return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
+  } else if (!isProtectedRoute) {
     return NextResponse.next();
   }
 
