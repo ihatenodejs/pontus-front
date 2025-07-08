@@ -1,9 +1,214 @@
+"use client"
+
 import { Nav } from "@/components/core/nav"
-import { SiForgejo, SiJellyfin, SiOllama } from "react-icons/si"
-import { TbKey, TbMail, TbServer, TbTool } from "react-icons/tb"
+import { SiForgejo, SiJellyfin, SiOllama, SiVaultwarden } from "react-icons/si"
+import { TbMail, TbServer, TbTool, TbKey, TbLogin, TbSend, TbExternalLink, TbInfoCircle } from "react-icons/tb"
 import Link from "next/link"
+import { useEffect, useState } from "react"
+import { authClient } from "@/util/auth-client"
+
+interface Service {
+  id: string;
+  name: string;
+  description: string;
+  priceStatus: string;
+  joinLink?: string;
+  enabled: boolean;
+}
+
+interface UserService {
+  serviceId: string;
+  serviceName: string;
+  serviceDescription: string;
+  priceStatus: string;
+  joinLink?: string;
+  grantedAt: string | null;
+  isOpen: boolean;
+}
+
+const getServiceIcon = (serviceName: string) => {
+  switch (serviceName.toLowerCase()) {
+    case 'git':
+      return SiForgejo;
+    case 'tv':
+      return SiJellyfin;
+    case 'ai':
+      return SiOllama;
+    case 'mail':
+    case 'email':
+      return TbMail;
+    case 'hosting':
+      return TbServer;
+    case 'keybox':
+      return TbKey;
+    case 'pass':
+      return SiVaultwarden;
+    default:
+      return TbTool;
+  }
+};
 
 export default function Services() {
+  const { data: session, isPending } = authClient.useSession();
+  const [services, setServices] = useState<Service[]>([]);
+  const [userServices, setUserServices] = useState<UserService[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    fetchServices();
+    if (session) {
+      fetchUserServices();
+    }
+  }, [session]);
+
+  const fetchServices = async () => {
+    try {
+      const response = await fetch("/api/services");
+      if (response.ok) {
+        const data = await response.json();
+        setServices(data.services);
+      }
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchUserServices = async () => {
+    try {
+      const response = await fetch("/api/user-services");
+      if (response.ok) {
+        const data = await response.json();
+        setUserServices(data.services);
+      }
+    } catch (error) {
+      console.error("Error fetching user services:", error);
+    }
+  };
+
+  const hasAccess = (serviceName: string) => {
+    return userServices.some(userService => userService.serviceName === serviceName);
+  };
+
+  const getUserJoinLink = (serviceName: string) => {
+    const userService = userServices.find(us => us.serviceName === serviceName);
+    return userService?.joinLink;
+  };
+
+  const getServiceButtonContent = (service: Service) => {
+    const isLoggedIn = !!session;
+    const userHasAccess = hasAccess(service.name);
+    const userJoinLink = getUserJoinLink(service.name);
+    const joinLink = userJoinLink || service.joinLink;
+
+    if (isLoggedIn && userHasAccess && joinLink) {
+      return (
+        <Link href={joinLink} target="_blank" rel="noopener noreferrer">
+          <button className="flex flex-row items-center justify-center gap-1 text-white bg-green-600 px-3 py-1.5 rounded-lg text-sm hover:bg-green-700 transition-all duration-300 cursor-pointer">
+            <TbExternalLink size={14} />
+            Open
+          </button>
+        </Link>
+      );
+    }
+
+    if (isLoggedIn && !userHasAccess && (service.priceStatus === 'by-request' || service.priceStatus === 'invite-only')) {
+      return (
+        <Link href="/requests">
+          <button className="flex flex-row items-center justify-center gap-1 text-white bg-blue-600 px-3 py-1.5 rounded-lg text-sm hover:bg-blue-700 transition-all duration-300 cursor-pointer">
+            <TbSend size={14} />
+            Request
+          </button>
+        </Link>
+      );
+    }
+
+    if (isLoggedIn && service.priceStatus === 'open' && joinLink) {
+      return (
+        <Link href={joinLink} target="_blank" rel="noopener noreferrer">
+          <button className="flex flex-row items-center justify-center gap-1 text-white bg-green-600 px-3 py-1.5 rounded-lg text-sm hover:bg-green-700 transition-all duration-300 cursor-pointer">
+            <TbExternalLink size={14} />
+            Join
+          </button>
+        </Link>
+      );
+    }
+
+    if (!isLoggedIn && service.priceStatus === 'open' && joinLink) {
+      return (
+        <Link href={joinLink} target="_blank" rel="noopener noreferrer">
+          <button className="flex flex-row items-center justify-center gap-1 text-white bg-green-600 px-3 py-1.5 rounded-lg text-sm hover:bg-green-700 transition-all duration-300 cursor-pointer">
+            <TbExternalLink size={14} />
+            Join
+          </button>
+        </Link>
+      );
+    }
+
+    if (!isLoggedIn && (service.priceStatus === 'invite-only' || service.priceStatus === 'by-request')) {
+      return (
+        <Link href="/login">
+          <button className="flex flex-row items-center justify-center gap-1 text-white bg-blue-600 px-3 py-1.5 rounded-lg text-sm hover:bg-blue-700 transition-all duration-300 cursor-pointer">
+            <TbLogin size={14} />
+            Login
+          </button>
+        </Link>
+      );
+    }
+
+    return null;
+  };
+
+  const getServiceCardColor = (service: Service) => {
+    const isLoggedIn = !!session;
+    const userHasAccess = hasAccess(service.name);
+
+    if (isLoggedIn && userHasAccess) {
+      return "bg-green-400 text-white";
+    }
+
+    switch (service.priceStatus) {
+      case 'open':
+        return "bg-blue-400 text-white";
+      case 'invite-only':
+        return "bg-orange-400 text-white";
+      case 'by-request':
+        return "bg-purple-400 text-white";
+      default:
+        return "bg-gray-400 text-white";
+    }
+  };
+
+  if (!mounted || isPending) {
+    return (
+      <main>
+        <Nav />
+        <div className="flex flex-col items-center justify-between gap-6 sm:gap-10 my-12 sm:my-16 px-4">
+          <div className="flex flex-row items-center justify-between gap-2">
+            <TbTool size={32} className="sm:w-9 sm:h-9" />
+            <h1 className="text-3xl sm:text-4xl font-bold">
+              services
+            </h1>
+          </div>
+          <div className="flex flex-col items-center justify-between gap-2">
+            <h2 className="text-2xl sm:text-3xl font-light text-center w-full flex flex-wrap items-center justify-center">
+              please select a service.
+            </h2>
+          </div>
+        </div>
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-pulse text-lg">Loading services...</div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main>
       <Nav />
@@ -20,68 +225,42 @@ export default function Services() {
           </h2>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 my-4 w-full max-w-6xl mx-auto px-4">
-        <Link href="/services/git">
-          <div className="flex flex-col gap-2 text-base sm:text-lg bg-blue-400 text-white px-6 sm:px-8 py-6 sm:py-8 rounded-2xl sm:rounded-4xl hover:bg-blue-500 transition-colors">
-            <div className="flex flex-row items-center justify-between gap-2">
-              <SiForgejo size={28} className="sm:w-9 sm:h-9" />
-              <span className="text-xl sm:text-2xl font-bold">
-                git
-              </span>
-            </div>
-          </div>
-        </Link>
-        <Link href="/services/mail">
-          <div className="flex flex-col gap-2 text-base sm:text-lg bg-blue-400 text-white px-6 sm:px-8 py-6 sm:py-8 rounded-2xl sm:rounded-4xl hover:bg-blue-500 transition-colors">
-            <div className="flex flex-row items-center justify-between gap-2">
-              <TbMail size={28} className="sm:w-9 sm:h-9" />
-              <span className="text-xl sm:text-2xl font-bold">
-                email
-              </span>
-            </div>
-          </div>
-        </Link>
-        <Link href="/services/ai">
-          <div className="flex flex-col gap-2 text-base sm:text-lg bg-blue-400 text-white px-6 sm:px-8 py-6 sm:py-8 rounded-2xl sm:rounded-4xl hover:bg-blue-500 transition-colors">
-            <div className="flex flex-row items-center justify-between gap-2">
-              <SiOllama size={28} className="sm:w-9 sm:h-9" />
-              <span className="text-xl sm:text-2xl font-bold">
-                ai
-              </span>
-            </div>
-          </div>
-        </Link>
-        <Link href="/services/tv">
-          <div className="flex flex-col gap-2 text-base sm:text-lg bg-blue-400 text-white px-6 sm:px-8 py-6 sm:py-8 rounded-2xl sm:rounded-4xl hover:bg-blue-500 transition-colors">
-            <div className="flex flex-row items-center justify-between gap-2">
-              <SiJellyfin size={28} className="sm:w-9 sm:h-9" />
-              <span className="text-xl sm:text-2xl font-bold">
-                tv
-              </span>
-            </div>
-          </div>
-        </Link>
-        <Link href="/services/keybox">
-          <div className="flex flex-col gap-2 text-base sm:text-lg bg-blue-400 text-white px-6 sm:px-8 py-6 sm:py-8 rounded-2xl sm:rounded-4xl hover:bg-blue-500 transition-colors">
-            <div className="flex flex-row items-center justify-between gap-2">
-              <TbKey size={28} className="sm:w-9 sm:h-9" />
-              <span className="text-xl sm:text-2xl font-bold">
-                keybox
-              </span>
-            </div>
-          </div>
-        </Link>
-        <Link href="/services/hosting">
-          <div className="flex flex-col gap-2 text-base sm:text-lg bg-blue-400 text-white px-6 sm:px-8 py-6 sm:py-8 rounded-2xl sm:rounded-4xl hover:bg-blue-500 transition-colors">
-            <div className="flex flex-row items-center justify-between gap-2">
-              <TbServer size={28} className="sm:w-9 sm:h-9" />
-              <span className="text-xl sm:text-2xl font-bold">
-                hosting
-              </span>
-            </div>
-          </div>
-        </Link>
-      </div>
+
+      {loading ? (
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-pulse text-lg">Loading services...</div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 my-4 w-full max-w-6xl mx-auto px-4">
+          {services.map((service) => {
+            const IconComponent = getServiceIcon(service.name);
+
+            return (
+              <div key={service.id} className="flex flex-col gap-4">
+                <div className={`flex flex-col gap-4 text-base sm:text-lg px-6 sm:px-8 py-6 sm:py-8 rounded-2xl sm:rounded-4xl transition-all ${getServiceCardColor(service)}`}>
+                  <Link href={`/services/${service.name}`} className="hover:opacity-90 transition-opacity">
+                    <div className="flex flex-row items-center gap-3">
+                      <IconComponent size={28} className="sm:w-9 sm:h-9" />
+                      <span className="text-xl sm:text-2xl font-bold">
+                        {service.name === 'mail' ? 'email' : service.name}
+                      </span>
+                    </div>
+                  </Link>
+                  <div className="flex flex-row mt-2 gap-3">
+                    {getServiceButtonContent(service)}
+                    <Link href={`/services/${service.name}`} target="_blank" rel="noopener noreferrer">
+                      <button className="flex flex-row items-center justify-center gap-1 text-white bg-green-600 px-3 py-1.5 rounded-lg text-sm hover:bg-green-700 transition-all duration-300 cursor-pointer">
+                        <TbInfoCircle size={14} />
+                        Info
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </main>
   )
 }

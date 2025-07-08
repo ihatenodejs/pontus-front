@@ -2,6 +2,7 @@ import {
   SiForgejo,
   SiJellyfin,
   SiOllama,
+  SiVaultwarden,
 } from "react-icons/si"
 import {
   TbBrowser,
@@ -72,7 +73,7 @@ export const services = [
   },
   {
     name: "tv",
-    description: "Private screening movies and tv shows. Powered by Jellyfin.",
+    description: "Private screening movies and TV shows. Powered by Jellyfin.",
     icon: SiJellyfin,
     priceStatus: "invite-only",
     adminView: {
@@ -174,6 +175,7 @@ export const services = [
     description: "By-request server and service hosting.",
     icon: TbServer,
     priceStatus: "by-request",
+    joinLink: "https://pass.librecloud.cc",
     adminView: {
       "Your data": {
         icon: TbServer,
@@ -192,5 +194,42 @@ export const services = [
         description: "Your sessions are visible to admins.",
       },
     }
+  },
+  {
+    name: "pass",
+    description: "A private password manager. Powered by Vaultwarden.",
+    icon: SiVaultwarden,
+    priceStatus: "open",
+    adminView: {
+      "Your total entry count": {
+        icon: TbServer,
+        description: "Admins can view how many passwords you have stored.",
+      },
+      "Your email address": {
+        icon: TbMail,
+        description: "Your email address is visible to admins.",
+      },
+      "Your organizations": {
+        icon: TbLink,
+        description: "If you create an organization, admins can view basic details.",
+      },
+    },
+    quickLinks: [
+      {
+        name: "Create an Account",
+        url: "https://pass.librecloud.cc/#/signup",
+        icon: TbUserPlus,
+      },
+      {
+        name: "Login",
+        url: "https://pass.librecloud.cc/#/login",
+        icon: TbUser,
+      },
+      {
+        name: "Login with Passkey",
+        url: "https://pass.librecloud.cc/#/login-with-passkey",
+        icon: TbKey,
+      },
+    ]
   },
 ]

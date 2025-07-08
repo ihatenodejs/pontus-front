@@ -3,7 +3,7 @@ services:
     build: .
     container_name: pontus
     ports:
-      - 3000:3000 # Comment this out if you are using a reverse proxy
+      - 3000:3000
     environment:
       - NODE_ENV=production
   postgres:
@@ -11,6 +11,8 @@ services:
     container_name: pontus-postgres
     volumes:
       - ./postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
     environment:
       - POSTGRES_USER=pontus
       - POSTGRES_PASSWORD=changeme
