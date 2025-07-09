@@ -18,6 +18,8 @@ export async function middleware(request: NextRequest) {
 
     if (sessionToken) {
       return NextResponse.redirect(new URL('/dashboard', request.url));
+    } else {
+      return NextResponse.next();
     }
   } else if (!isProtectedRoute) {
     return NextResponse.next();
