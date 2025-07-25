@@ -6,7 +6,6 @@ import {
 } from "react-icons/si"
 import {
   TbBrowser,
-  TbBubbleText,
   TbDeviceTv,
   TbGitBranch,
   TbKey,
@@ -101,10 +100,6 @@ export const services = [
     icon: SiOllama,
     priceStatus: "invite-only",
     adminView: {
-      "Your chats": {
-        icon: TbBubbleText,
-        description: "Your chats are visible to admins.",
-      },
       "Your email address": {
         icon: TbMail,
         description: "Your email address is visible to admins.",
@@ -200,6 +195,7 @@ export const services = [
     description: "A private password manager. Powered by Vaultwarden.",
     icon: SiVaultwarden,
     priceStatus: "open",
+    joinLink: "https://pass.librecloud.cc",
     adminView: {
       "Your total entry count": {
         icon: TbServer,

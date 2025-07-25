@@ -11,7 +11,7 @@ async function getChallenge() {
 
   const challenge = await createChallenge({
     hmacKey,
-    maxNumber: 1400000,
+    maxNumber: 1000000,
   })
 
   return NextResponse.json(challenge)

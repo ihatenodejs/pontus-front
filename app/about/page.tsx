@@ -67,7 +67,7 @@ export default function About() {
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 my-3">
             <Link href="https://t.me/p0ntu5">
-              <button className="flex flex-row items-center justify-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-md w-full sm:w-auto">
+              <button className="flex flex-row items-center justify-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-md w-full sm:w-auto cursor-pointer">
                 <RiTelegram2Line size={24} />
                 <span className="text-sm sm:text-base">
                   contact
@@ -75,7 +75,7 @@ export default function About() {
               </button>
             </Link>
             <Link href="https://t.me/pontushub">
-              <button className="flex flex-row items-center justify-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-md w-full sm:w-auto">
+              <button className="flex flex-row items-center justify-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-md w-full sm:w-auto cursor-pointer">
                 <RiTelegram2Line size={24} />
                 <span className="text-sm sm:text-base">
                   join channel

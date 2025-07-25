@@ -77,14 +77,21 @@ export default function Home() {
               <h2 className="text-2xl sm:text-3xl font-bold text-center w-full">Services</h2>
               <h3 className="text-lg sm:text-xl italic text-center w-full text-gray-600 hidden sm:block">what can we offer you?</h3>
               {loading ? (
-                <div className="animate-pulse text-lg">Loading services...</div>
+                <div className="grid grid-cols-3 gap-8 sm:gap-10 my-6 sm:my-8">
+                  {[...Array(6)].map((_, index) => (
+                    <div key={index} className="flex flex-col items-center justify-center gap-3 animate-pulse">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+                      <div className="w-16 h-4 sm:h-5 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    </div>
+                  ))}
+                </div>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 sm:gap-10 my-6 sm:my-8">
+                <div className="grid grid-cols-3 gap-8 sm:gap-10 my-6 sm:my-8">
                   {services.map((service) => {
                     const IconComponent = getServiceIcon(service.name);
                     return (
                       <div key={service.id} className="flex flex-col items-center justify-center gap-3">
-                        <Link href={`/services/${service.name}`} className="flex flex-col items-center gap-2 hover:opacity-75 transition-opacity">
+                        <Link href={`/services/${service.name}`} className="flex flex-col items-center gap-2 hover:opacity-75 transition-opacity duration-200">
                           <IconComponent size={40} className="sm:w-12 sm:h-12" />
                           <h3 className="text-base sm:text-lg font-bold">{service.name}</h3>
                         </Link>
@@ -96,14 +103,14 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col items-center justify-start gap-6 w-full lg:max-w-md">
-              <h2 className="text-2xl sm:text-3xl font-bold text-center w-full">Where we are</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-center w-full">Where we operate</h2>
               <h3 className="text-lg sm:text-xl italic text-center w-full text-gray-600 hidden sm:block">how can you find us?</h3>
               <div className="flex flex-col items-center gap-6 mt-6">
                 <p className="text-base sm:text-lg text-center">
-                  p0ntus is fully on the public internet! our servers are mainly located in the united states.
+                  p0ntus operates fully on the internet! our servers are mainly located in the united states.
                 </p>
                 <p className="text-base sm:text-lg text-center">
-                  we also operate servers in the united states, canada and germany.
+                  we also operate servers located in canada and germany.
                 </p>
                 <Link href="/servers" className="flex flex-row items-center gap-2 text-base sm:text-lg text-center text-blue-500 hover:underline transition-colors">
                   our servers <TbArrowRight size={20} />
@@ -116,10 +123,10 @@ export default function Home() {
               <h3 className="text-lg sm:text-xl italic text-center w-full text-gray-600 hidden sm:block">what&apos;s the point?</h3>
               <div className="flex flex-col items-center gap-6 mt-6">
                 <p className="text-base sm:text-lg text-center">
-                  everything today includes microtransactions, and we were fed up with it.
+                  everything today revolves around microtransactions, and we&apos;re fed up with it.
                 </p>
                 <p className="text-base sm:text-lg text-center">
-                  p0ntus exists to show that it is possible to have a free and open set of services that people have fun using.
+                  p0ntus exists to show that it&apos;s possible to have a free and open set of services that people enjoy using.
                 </p>
               </div>
             </div>

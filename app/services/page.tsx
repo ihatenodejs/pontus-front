@@ -2,7 +2,7 @@
 
 import { Nav } from "@/components/core/nav"
 import { SiForgejo, SiJellyfin, SiOllama, SiVaultwarden } from "react-icons/si"
-import { TbMail, TbServer, TbTool, TbKey, TbLogin, TbSend, TbExternalLink, TbInfoCircle } from "react-icons/tb"
+import { TbMail, TbServer, TbTool, TbKey, TbSend, TbExternalLink, TbInfoCircle } from "react-icons/tb"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { authClient } from "@/util/auth-client"
@@ -155,8 +155,8 @@ export default function Services() {
       return (
         <Link href="/login">
           <button className="flex flex-row items-center justify-center gap-1 text-white bg-blue-600 px-3 py-1.5 rounded-lg text-sm hover:bg-blue-700 transition-all duration-300 cursor-pointer">
-            <TbLogin size={14} />
-            Login
+            <TbSend size={14} />
+            Request
           </button>
         </Link>
       );
@@ -231,30 +231,33 @@ export default function Services() {
           <div className="animate-pulse text-lg">Loading services...</div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 my-4 w-full max-w-6xl mx-auto px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 gap-y-14 sm:gap-y-6 my-8 w-full max-w-6xl mx-auto px-4">
           {services.map((service) => {
             const IconComponent = getServiceIcon(service.name);
 
             return (
-              <div key={service.id} className="flex flex-col gap-4">
-                <div className={`flex flex-col gap-4 text-base sm:text-lg px-6 sm:px-8 py-6 sm:py-8 rounded-2xl sm:rounded-4xl transition-all ${getServiceCardColor(service)}`}>
-                  <Link href={`/services/${service.name}`} className="hover:opacity-90 transition-opacity">
+              <div key={service.id} className="group">
+                <Link href={`/services/${service.name}`} className="block">
+                  <div className={`flex flex-col gap-4 text-base sm:text-lg px-6 sm:px-8 py-6 sm:py-8 rounded-2xl transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-xl cursor-pointer ${getServiceCardColor(service)} shadow-lg hover:shadow-2xl`}>
                     <div className="flex flex-row items-center gap-3">
-                      <IconComponent size={28} className="sm:w-9 sm:h-9" />
+                      <IconComponent size={32} className="sm:w-10 sm:h-10" />
                       <span className="text-xl sm:text-2xl font-bold">
                         {service.name === 'mail' ? 'email' : service.name}
                       </span>
                     </div>
-                  </Link>
-                  <div className="flex flex-row mt-2 gap-3">
-                    {getServiceButtonContent(service)}
-                    <Link href={`/services/${service.name}`} target="_blank" rel="noopener noreferrer">
-                      <button className="flex flex-row items-center justify-center gap-1 text-white bg-green-600 px-3 py-1.5 rounded-lg text-sm hover:bg-green-700 transition-all duration-300 cursor-pointer">
-                        <TbInfoCircle size={14} />
-                        Info
-                      </button>
-                    </Link>
+                    <p className="text-sm sm:text-base opacity-90 line-clamp-2">
+                      {service.description}
+                    </p>
                   </div>
+                </Link>
+                <div className="flex flex-row mt-4 gap-3 justify-center">
+                  {getServiceButtonContent(service)}
+                  <Link href={`/services/${service.name}`}>
+                    <button className="flex flex-row items-center justify-center gap-1 text-white bg-gray-600 px-3 py-1.5 rounded-lg text-sm hover:bg-gray-700 transition-all duration-300 cursor-pointer">
+                      <TbInfoCircle size={14} />
+                      Info
+                    </button>
+                  </Link>
                 </div>
               </div>
             );

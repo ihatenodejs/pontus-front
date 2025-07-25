@@ -19,6 +19,7 @@ async function seedDatabase() {
       console.log(`✓ Added service: ${service.name}`);
     }
     console.log("Database seeded!");
+    process.exit(0);
   } catch (error) {
     console.error("Error seeding database:", error);
     process.exit(1);
