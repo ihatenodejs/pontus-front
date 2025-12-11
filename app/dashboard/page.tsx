@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
 import { Nav } from "@/components/core/nav";
 import { authClient } from "@/util/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SiForgejo, SiJellyfin, SiOllama } from "react-icons/si";
 import {
   TbDashboard,
@@ -27,7 +27,7 @@ export default function Dashboard() {
   const [openServices, setOpenServices] = useState<string[]>([]);
 
   useEffect(() => {
-    setMounted(true);
+    setMounted(true); // eslint-disable-line react-hooks/set-state-in-effect -- Client-side hydration check
   }, []);
 
   useEffect(() => {
@@ -36,25 +36,31 @@ export default function Dashboard() {
     }
   }, [session, isPending, mounted, router]);
 
-  useEffect(() => {
-    if (session) {
-      fetchUserServices();
-    }
-  }, [session]);
-
-  const fetchUserServices = async () => {
+  const fetchUserServices = useCallback(async () => {
     try {
       const response = await fetch("/api/user-services");
       if (response.ok) {
         const data = await response.json();
         const services = data.services;
-        setUserServices(services.map((s: { serviceName: string }) => s.serviceName));
-        setOpenServices(services.filter((s: { isOpen: boolean }) => s.isOpen).map((s: { serviceName: string }) => s.serviceName));
+        setUserServices(
+          services.map((s: { serviceName: string }) => s.serviceName)
+        );
+        setOpenServices(
+          services
+            .filter((s: { isOpen: boolean }) => s.isOpen)
+            .map((s: { serviceName: string }) => s.serviceName)
+        );
       }
     } catch (error) {
       console.error("Error fetching services:", error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (session) {
+      fetchUserServices(); // eslint-disable-line react-hooks/set-state-in-effect -- Fetching user services from API on session change
+    }
+  }, [session, fetchUserServices]);
 
   if (!mounted || isPending) {
     return (
@@ -79,12 +85,12 @@ export default function Dashboard() {
   }
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     }).format(date);
   };
 
@@ -94,14 +100,12 @@ export default function Dashboard() {
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="flex flex-row items-center justify-start gap-3 mb-8">
           <TbDashboard size={32} className="text-blue-500" />
-          <h1 className="text-3xl sm:text-4xl font-bold">
-            Dashboard
-          </h1>
+          <h1 className="text-3xl sm:text-4xl font-bold">Dashboard</h1>
         </div>
 
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-2xl mb-8">
           <h2 className="text-2xl font-semibold">
-            Welcome back, {session.user.name || 'User'}! 👋
+            Welcome back, {session.user.name || "User"}! 👋
           </h2>
         </div>
 
@@ -163,7 +167,10 @@ export default function Dashboard() {
 
         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl justify-between shadow-sm border border-gray-200 dark:border-gray-700 flex flex-row items-center gap-3 mb-8">
           <h3 className="text-xl font-semibold">Need access to a service?</h3>
-          <Link href="/requests" className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2 cursor-pointer">
+          <Link
+            href="/requests"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2 cursor-pointer"
+          >
             <TbReceipt className="w-4 h-4" />
             Make a Request
           </Link>
@@ -179,7 +186,9 @@ export default function Dashboard() {
               <div className="flex items-center gap-2">
                 <TbUser className="w-4 h-4 text-gray-400" />
                 <span className="text-sm text-gray-500">Name:</span>
-                <span className="font-medium">{session.user.name || 'Not provided'}</span>
+                <span className="font-medium">
+                  {session.user.name || "Not provided"}
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <TbMail className="w-4 h-4 text-gray-400" />
@@ -189,8 +198,14 @@ export default function Dashboard() {
               <div className="flex items-center gap-2">
                 <TbShield className="w-4 h-4 text-gray-400" />
                 <span className="text-sm text-gray-500">Email Verified:</span>
-                <span className={`font-medium ${session.user.emailVerified ? 'text-green-600' : 'text-orange-500'}`}>
-                  {session.user.emailVerified ? 'Yes' : 'No'}
+                <span
+                  className={`font-medium ${
+                    session.user.emailVerified
+                      ? "text-green-600"
+                      : "text-orange-500"
+                  }`}
+                >
+                  {session.user.emailVerified ? "Yes" : "No"}
                 </span>
               </div>
             </div>
@@ -205,12 +220,16 @@ export default function Dashboard() {
               <div className="flex items-center gap-2">
                 <TbCalendar className="w-4 h-4 text-gray-400" />
                 <span className="text-sm text-gray-500">Account Created:</span>
-                <span className="font-medium text-sm">{formatDate(session.user.createdAt)}</span>
+                <span className="font-medium text-sm">
+                  {formatDate(session.user.createdAt)}
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <TbCalendar className="w-4 h-4 text-gray-400" />
                 <span className="text-sm text-gray-500">Last Updated:</span>
-                <span className="font-medium text-sm">{formatDate(session.user.updatedAt)}</span>
+                <span className="font-medium text-sm">
+                  {formatDate(session.user.updatedAt)}
+                </span>
               </div>
             </div>
           </div>
@@ -220,14 +239,22 @@ export default function Dashboard() {
   );
 }
 
-function ServiceCard({ title, icon, link, signupType, signupLink, hasAccess, isOpen }: {
-  title: string,
-  icon: React.ReactNode,
-  link?: string,
-  signupType: "request" | "self" | "invite",
-  signupLink: string,
-  hasAccess: boolean,
-  isOpen: boolean
+function ServiceCard({
+  title,
+  icon,
+  link,
+  signupType,
+  signupLink,
+  hasAccess,
+  isOpen,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  link?: string;
+  signupType: "request" | "self" | "invite";
+  signupLink: string;
+  hasAccess: boolean;
+  isOpen: boolean;
 }) {
   const cardClassName = hasAccess
     ? "bg-green-50 dark:bg-green-900/20 p-6 rounded-xl shadow-sm border border-green-200 dark:border-green-700"
@@ -236,13 +263,21 @@ function ServiceCard({ title, icon, link, signupType, signupLink, hasAccess, isO
   return (
     <div className={cardClassName}>
       <div className="flex items-center justify-between gap-3 mb-4">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => hasAccess && link && window.open(link, '_blank')}>
+        <div
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => hasAccess && link && window.open(link, "_blank")}
+        >
           {icon}
           <h3 className="text-xl font-semibold">{title}</h3>
         </div>
-        {hasAccess && link && <div className="flex items-center gap-2">
-          <TbExternalLink className="text-blue-500 w-6 h-6 cursor-pointer" onClick={() => window.open(link, '_blank')} />
-        </div>}
+        {hasAccess && link && (
+          <div className="flex items-center gap-2">
+            <TbExternalLink
+              className="text-blue-500 w-6 h-6 cursor-pointer"
+              onClick={() => window.open(link, "_blank")}
+            />
+          </div>
+        )}
       </div>
       {hasAccess ? (
         <div className="space-y-2">
@@ -252,13 +287,21 @@ function ServiceCard({ title, icon, link, signupType, signupLink, hasAccess, isO
           </div>
           {isOpen && (
             <p className="text-sm text-gray-500">
-              Open service: <Link href={signupLink} className="text-blue-500 hover:underline">{signupType === "request" ? "Request account" : "Create account"}</Link>
+              Open service:{" "}
+              <Link href={signupLink} className="text-blue-500 hover:underline">
+                {signupType === "request"
+                  ? "Request account"
+                  : "Create account"}
+              </Link>
             </p>
           )}
         </div>
       ) : (
         <p className="text-sm text-gray-500 mt-4">
-          Need an account? <Link href={signupLink} className="text-blue-500 hover:underline">{signupType === "request" ? "Request one!" : "Sign up!"}</Link>
+          Need an account?{" "}
+          <Link href={signupLink} className="text-blue-500 hover:underline">
+            {signupType === "request" ? "Request one!" : "Sign up!"}
+          </Link>
         </p>
       )}
     </div>
